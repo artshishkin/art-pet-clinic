@@ -14,7 +14,7 @@
     </parent>
     <groupId>com.artarkatesoft</groupId>
     <artifactId>art-pet-clinic</artifactId>
-    <version>0.0.2</version>
+    <version>0.0.3-SNAPSHOT</version>
     <name>art-pet-clinic</name>
     <description>Pet Clinic Project From SFG Tutorial on Spring 5</description>
 
@@ -26,7 +26,7 @@
     <scm>
         <developerConnection>scm:git:https://github.com/artshishkin/art-pet-clinic.git</developerConnection>
         <url>https://github.com/artshishkin/art-pet-clinic</url>
-        <tag>art-pet-clinic-0.0.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <build>
