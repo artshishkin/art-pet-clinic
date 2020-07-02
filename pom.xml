@@ -21,7 +21,13 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <project.scm.id>github</project.scm.id>
     </properties>
+
+    <scm>
+        <developerConnection>scm:git:https://github.com/artshishkin/art-pet-clinic</developerConnection>
+        <url>https://github.com/artshishkin/art-pet-clinic.git</url>
+    </scm>
 
     <build>
         <plugins>
