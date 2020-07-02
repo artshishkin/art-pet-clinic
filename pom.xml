@@ -44,15 +44,6 @@
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
-<!--            <plugin>-->
-<!--                <groupId>org.apache.maven.plugins</groupId>-->
-<!--                <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <additionalOptions>-->
-<!--                        <additionalOption>-Xdoclint:none</additionalOption>-->
-<!--                    </additionalOptions>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
         </plugins>
     </build>
 
