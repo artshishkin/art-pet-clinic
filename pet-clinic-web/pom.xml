@@ -16,7 +16,7 @@
         <dependency>
             <artifactId>pet-clinic-data</artifactId>
             <groupId>com.artarkatesoft</groupId>
-            <version>${project.version}</version>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
