@@ -15,13 +15,12 @@
     </parent>
     <groupId>com.artarkatesoft</groupId>
     <artifactId>art-pet-clinic</artifactId>
-    <version>${revision}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>art-pet-clinic</name>
     <description>Pet Clinic Project From SFG Tutorial on Spring 5</description>
 
     <properties>
         <java.version>1.8</java.version>
-        <revision>0.0.1-SNAPSHOT</revision>
     </properties>
 
     <build>
