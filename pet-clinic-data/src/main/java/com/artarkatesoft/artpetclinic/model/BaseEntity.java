@@ -5,13 +5,13 @@ import java.io.Serializable;
 
 public class BaseEntity implements Serializable {
 
-    private Long i;
+    private Long id;
 
-    public Long getI() {
-        return i;
+    public Long getId() {
+        return id;
     }
 
-    public void setI(Long i) {
-        this.i = i;
+    public void setId(Long id) {
+        this.id = id;
     }
 }
