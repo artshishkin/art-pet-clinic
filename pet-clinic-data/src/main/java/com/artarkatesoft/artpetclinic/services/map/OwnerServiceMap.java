@@ -13,10 +13,4 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
     public Owner findByLastName(String lastName) {
         return this.findAll().stream().filter(owner -> owner.getLastName().equals(lastName)).findFirst().orElse(null);
     }
-
-    @Override
-    public Owner save(Owner owner) {
-        Long id = owner.getId();
-        return this.save(id, owner);
-    }
 }

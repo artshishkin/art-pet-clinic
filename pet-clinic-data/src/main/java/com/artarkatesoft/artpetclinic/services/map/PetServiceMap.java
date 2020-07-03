@@ -9,9 +9,4 @@ import java.util.Objects;
 
 @Service
 public class PetServiceMap extends AbstractMapService<Pet, Long> implements PetService {
-    @Override
-    public Pet save(Pet pet) {
-        Long id = pet.getId();
-        return this.save(id, pet);
-    }
 }

@@ -16,15 +16,17 @@ public abstract class AbstractMapService<T extends BaseEntity, ID extends Long> 
         return map.get(id);
     }
 
-    protected T save(ID id, T object) {
-        Long newId = (id != null) ?
-                id :
-                (map.isEmpty()) ?
-                        1 :
-                        Collections.max(map.keySet()) + 1L;
+    public T save(T object) {
+        Objects.requireNonNull(object, "Object cannot be null");
+        Long id = object.getId();
+        Long newId = (id != null) ? id : getNextId();
         object.setId(newId);
         map.put(newId, object);
         return object;
+    }
+
+    private Long getNextId() {
+        return (map.isEmpty()) ? 1 : Collections.max(map.keySet()) + 1L;
     }
 
     public void delete(T object) {
