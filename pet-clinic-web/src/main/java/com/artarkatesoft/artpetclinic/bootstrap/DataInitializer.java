@@ -1,4 +1,4 @@
-package com.artarkatesoft.artpetclinic.services.bootstrap;
+package com.artarkatesoft.artpetclinic.bootstrap;
 
 import com.artarkatesoft.artpetclinic.model.Owner;
 import com.artarkatesoft.artpetclinic.model.Pet;
@@ -15,7 +15,7 @@ import java.time.LocalDate;
 
 @Component
 @RequiredArgsConstructor
-public class BootstrapData implements CommandLineRunner {
+public class DataInitializer implements CommandLineRunner {
 
     private final OwnerService ownerService;
     private final PetService petService;
@@ -23,7 +23,8 @@ public class BootstrapData implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Owner owner = new Owner();
+        Owner owner;
+        owner = new Owner();
         owner.setFirstName("Art");
         owner.setLastName("Shyshkin");
         owner = ownerService.save(owner);
@@ -50,6 +51,13 @@ public class BootstrapData implements CommandLineRunner {
         vet.setFirstName("Kate");
         vet.setLastName("Dobryden");
         vetService.save(vet);
+
+
+        owner = new Owner();
+        owner.setFirstName("Nazar");
+        owner.setLastName("Shyshkin");
+        owner.setId(111L);
+        owner = ownerService.save(owner);
 
         System.out.println("--------All Owners------");
         System.out.println(ownerService.findAll());
