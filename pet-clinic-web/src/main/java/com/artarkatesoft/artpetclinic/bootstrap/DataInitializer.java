@@ -59,6 +59,12 @@ public class DataInitializer implements CommandLineRunner {
         owner.setId(111L);
         owner = ownerService.save(owner);
 
+        vet = new Vet();
+        vet.setFirstName("Arina");
+        vet.setLastName("Shyshkina");
+        vet.setId(222L);
+        vetService.save(vet);
+
         System.out.println("--------All Owners------");
         System.out.println(ownerService.findAll());
         System.out.println("--------All Vets------");
