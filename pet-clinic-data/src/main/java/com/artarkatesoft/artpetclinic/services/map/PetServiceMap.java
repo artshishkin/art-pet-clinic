@@ -11,15 +11,7 @@ import java.util.Objects;
 public class PetServiceMap extends AbstractMapService<Pet, Long> implements PetService {
     @Override
     public Pet save(Pet pet) {
-        Long id = pet.getId() != null ?
-                pet.getId() :
-                (
-                        map.keySet().stream()
-                                .filter(Objects::nonNull)
-                                .max(Comparator.naturalOrder())
-                                .orElse(0L) + 1L
-                );
-        pet.setId(id);
+        Long id = pet.getId();
         return this.save(id, pet);
     }
 }

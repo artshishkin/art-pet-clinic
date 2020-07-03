@@ -11,15 +11,7 @@ import java.util.Objects;
 public class VetServiceMap extends AbstractMapService<Vet, Long> implements VetService {
     @Override
     public Vet save(Vet vet) {
-        Long id = vet.getId() != null ?
-                vet.getId() :
-                (
-                        map.keySet().stream()
-                                .filter(Objects::nonNull)
-                                .max(Comparator.naturalOrder())
-                                .orElse(0L) + 1L
-                );
-        vet.setId(id);
+        Long id = vet.getId();
         return this.save(id, vet);
     }
 }

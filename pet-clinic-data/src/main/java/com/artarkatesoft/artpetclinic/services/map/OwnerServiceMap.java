@@ -16,15 +16,7 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
 
     @Override
     public Owner save(Owner owner) {
-        Long id = owner.getId() != null ?
-                owner.getId() :
-                (
-                        map.keySet().stream()
-                                .filter(Objects::nonNull)
-                                .max(Comparator.naturalOrder())
-                                .orElse(0L) + 1L
-                );
-        owner.setId(id);
+        Long id = owner.getId();
         return this.save(id, owner);
     }
 }

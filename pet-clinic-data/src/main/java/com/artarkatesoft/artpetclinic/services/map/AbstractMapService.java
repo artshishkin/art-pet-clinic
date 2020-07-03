@@ -1,9 +1,11 @@
 package com.artarkatesoft.artpetclinic.services.map;
 
+import com.artarkatesoft.artpetclinic.model.BaseEntity;
+
 import java.util.*;
 
-public abstract class AbstractMapService<T, ID> {
-    protected Map<ID, T> map = new HashMap<>();
+public abstract class AbstractMapService<T extends BaseEntity, ID extends Long> {
+    protected Map<Long, T> map = new HashMap<>();
 
     public Set<T> findAll() {
         return new HashSet<>(map.values());
@@ -15,7 +17,13 @@ public abstract class AbstractMapService<T, ID> {
     }
 
     protected T save(ID id, T object) {
-        map.put(id, object);
+        Long newId = (id != null) ?
+                id :
+                (map.isEmpty()) ?
+                        1 :
+                        Collections.max(map.keySet()) + 1L;
+        object.setId(newId);
+        map.put(newId, object);
         return object;
     }
 
