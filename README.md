@@ -8,3 +8,13 @@
 - set `<autoVersionSubmodules>true</autoVersionSubmodules>` 
 - ...
 - removed configuration to try `mvn release:perform -Darguments="-Dmaven.deploy.skip=true"` 
+
+###77 Spring Boot Configuration Demo
+
+####Useful commands:
+
+- `mvn spring-boot:help -Ddetail=true`
+- `mvn spring-boot:run -Dspring-boot.run.arguments=--debug`???-not working for me
+- `mvn spring-boot:run -Drun.arguments=--debug`???-not working for me
+- `mvn spring-boot:run --debug` -some mystic debug output
+- you can in IDEA toggle radio button to output debug logging!!! in "Run Configuration" 
