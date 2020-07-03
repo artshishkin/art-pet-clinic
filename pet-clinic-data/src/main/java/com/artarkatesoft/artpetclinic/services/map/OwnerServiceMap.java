@@ -5,6 +5,7 @@ import com.artarkatesoft.artpetclinic.services.OwnerService;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 @Service
 public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements OwnerService {
@@ -17,7 +18,13 @@ public class OwnerServiceMap extends AbstractMapService<Owner, Long> implements 
     public Owner save(Owner owner) {
         Long id = owner.getId() != null ?
                 owner.getId() :
-                map.keySet().stream().max(Comparator.naturalOrder()).orElse(1L);
+                (
+                        map.keySet().stream()
+                                .filter(Objects::nonNull)
+                                .max(Comparator.naturalOrder())
+                                .orElse(0L) + 1L
+                );
+        owner.setId(id);
         return this.save(id, owner);
     }
 }

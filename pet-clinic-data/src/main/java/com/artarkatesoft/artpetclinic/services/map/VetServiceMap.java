@@ -5,6 +5,7 @@ import com.artarkatesoft.artpetclinic.services.VetService;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 @Service
 public class VetServiceMap extends AbstractMapService<Vet, Long> implements VetService {
@@ -12,7 +13,13 @@ public class VetServiceMap extends AbstractMapService<Vet, Long> implements VetS
     public Vet save(Vet vet) {
         Long id = vet.getId() != null ?
                 vet.getId() :
-                map.keySet().stream().max(Comparator.naturalOrder()).orElse(1L);
+                (
+                        map.keySet().stream()
+                                .filter(Objects::nonNull)
+                                .max(Comparator.naturalOrder())
+                                .orElse(0L) + 1L
+                );
+        vet.setId(id);
         return this.save(id, vet);
     }
 }
