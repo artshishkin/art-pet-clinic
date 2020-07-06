@@ -1,9 +1,6 @@
 package com.artarkatesoft.artpetclinic.bootstrap;
 
-import com.artarkatesoft.artpetclinic.model.Owner;
-import com.artarkatesoft.artpetclinic.model.Pet;
-import com.artarkatesoft.artpetclinic.model.PetType;
-import com.artarkatesoft.artpetclinic.model.Vet;
+import com.artarkatesoft.artpetclinic.model.*;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
 import com.artarkatesoft.artpetclinic.services.VetService;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +18,24 @@ public class DataInitializer implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+
+        boolean dataLoaded = !ownerService.findAll().isEmpty();
+        if (!dataLoaded) {
+            loadData();
+        }
+
+    }
+
+    private void loadData() {
+        bootstrapOwners();
+        bootstrapVets();
+        System.out.println("--------All Owners------");
+        System.out.println(ownerService.findAll());
+        System.out.println("--------All Vets------");
+        System.out.println(vetService.findAll());
+    }
+
+    private void bootstrapOwners() {
 
         PetType dog = new PetType();
         dog.setName("dog");
@@ -55,11 +70,6 @@ public class DataInitializer implements CommandLineRunner {
 
         ownerService.save(owner);
 
-        Vet vet = new Vet();
-        vet.setFirstName("Kate");
-        vet.setLastName("Dobryden");
-        vetService.save(vet);
-
         owner = new Owner();
         owner.setFirstName("Nazar");
         owner.setLastName("Shyshkin");
@@ -77,16 +87,35 @@ public class DataInitializer implements CommandLineRunner {
         owner.getPets().add(pet);
 
         ownerService.save(owner);
+    }
+
+    private void bootstrapVets() {
+//        INSERT INTO specialties VALUES (1, 'radiology');
+//        INSERT INTO specialties VALUES (2, 'surgery');
+//        INSERT INTO specialties VALUES (3, 'dentistry');
+
+        Specialty radiology = new Specialty();
+        radiology.setDescription("radiology");
+
+        Specialty surgery = new Specialty();
+        surgery.setDescription("surgery");
+
+        Specialty dentistry = new Specialty();
+        dentistry.setDescription("dentistry");
+
+        Vet vet = new Vet();
+        vet.setFirstName("Kate");
+        vet.setLastName("Dobryden");
+        vet.getSpecialties().add(radiology);
+        vetService.save(vet);
+        vet.getSpecialties().add(dentistry);
+        vetService.save(vet);
 
         vet = new Vet();
         vet.setFirstName("Arina");
         vet.setLastName("Shyshkina");
         vet.setId(222L);
+        vet.getSpecialties().add(surgery);
         vetService.save(vet);
-
-        System.out.println("--------All Owners------");
-        System.out.println(ownerService.findAll());
-        System.out.println("--------All Vets------");
-        System.out.println(vetService.findAll());
     }
 }
