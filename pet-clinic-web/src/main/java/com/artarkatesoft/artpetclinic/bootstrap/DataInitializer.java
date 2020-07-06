@@ -6,6 +6,7 @@ import com.artarkatesoft.artpetclinic.model.PetType;
 import com.artarkatesoft.artpetclinic.model.Vet;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
 import com.artarkatesoft.artpetclinic.services.PetService;
+import com.artarkatesoft.artpetclinic.services.PetTypeService;
 import com.artarkatesoft.artpetclinic.services.VetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -20,20 +21,26 @@ public class DataInitializer implements CommandLineRunner {
     private final OwnerService ownerService;
     private final PetService petService;
     private final VetService vetService;
+    private final PetTypeService petTypeService;
 
     @Override
     public void run(String... args) throws Exception {
+
+        PetType dog = new PetType();
+        dog.setName("dog");
+        dog = petTypeService.save(dog);
+
+        PetType cat = new PetType();
+        cat.setName("cat");
+        cat = petTypeService.save(cat);
+
+
         Owner owner;
         owner = new Owner();
         owner.setFirstName("Art");
         owner.setLastName("Shyshkin");
         owner = ownerService.save(owner);
 
-        PetType dog = new PetType();
-        dog.setName("dog");
-        PetType cat = new PetType();
-        cat.setName("cat");
-        
         Pet pet;
         pet = new Pet();
         pet.setBirthDate(LocalDate.now());
@@ -71,7 +78,6 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println(vetService.findAll());
         System.out.println("--------All Pets------");
         System.out.println(petService.findAll());
-
 
 
     }
