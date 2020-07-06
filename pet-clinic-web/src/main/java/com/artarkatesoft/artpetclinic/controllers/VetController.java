@@ -20,7 +20,7 @@ public class VetController {
         this.vetService = vetService;
     }
 
-    @RequestMapping("vets")
+    @RequestMapping({"vets","vets.html"})
     public String list(Model model) {
 
         List<Vet> vetList = vetService.findAll()
