@@ -10,7 +10,7 @@ import java.util.stream.StreamSupport;
 
 public abstract class AbstractSDJpaService<T extends BaseEntity, ID extends Long> implements CrudService<T, ID> {
 
-    private final CrudRepository<T, ID> repository;
+    protected final CrudRepository<T, ID> repository;
 
     public AbstractSDJpaService(CrudRepository<T, ID> repository) {
         this.repository = repository;
