@@ -14,7 +14,7 @@ import java.util.stream.StreamSupport;
 @Component
 @Profile("springdatajpa")
 @RequiredArgsConstructor
-public class VetServiceSDJpa implements VetService {
+public class VetSDJpaService implements VetService {
 
     private final VetRepository vetRepository;
 

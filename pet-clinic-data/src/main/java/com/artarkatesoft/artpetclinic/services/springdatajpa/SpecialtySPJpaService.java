@@ -14,7 +14,7 @@ import java.util.stream.StreamSupport;
 @Component
 @RequiredArgsConstructor
 @Profile("springdatajpa")
-public class SpecialtyServiceSPJpa implements SpecialtyService {
+public class SpecialtySPJpaService implements SpecialtyService {
 
     private final SpecialtyRepository specialtyRepository;
 

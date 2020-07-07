@@ -14,7 +14,7 @@ import java.util.stream.StreamSupport;
 @Component
 @RequiredArgsConstructor
 @Profile("springdatajpa")
-public class PetTypeServiceCDJpa implements PetTypeService {
+public class PetTypeSDJpaService implements PetTypeService {
 
     private final PetTypeRepository petTypeRepository;
 
