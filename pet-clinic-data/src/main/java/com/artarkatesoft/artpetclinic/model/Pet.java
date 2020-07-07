@@ -4,18 +4,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name="pets")
+@Table(name = "pets")
 @Data
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
-public class Pet extends BaseEntity{
+public class Pet extends BaseEntity {
     private String name;
 
     @ManyToOne
@@ -27,4 +26,7 @@ public class Pet extends BaseEntity{
     @ManyToOne
     @JoinColumn
     private Owner owner;
+
+    @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
+    private Set<Visit> visits = new HashSet<>();
 }
