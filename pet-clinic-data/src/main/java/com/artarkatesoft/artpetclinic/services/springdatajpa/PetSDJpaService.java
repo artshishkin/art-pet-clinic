@@ -5,13 +5,13 @@ import com.artarkatesoft.artpetclinic.repositories.PetRepository;
 import com.artarkatesoft.artpetclinic.services.PetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Component
+@Service
 @RequiredArgsConstructor
 @Profile("springdatajpa")
 public class PetSDJpaService implements PetService {
