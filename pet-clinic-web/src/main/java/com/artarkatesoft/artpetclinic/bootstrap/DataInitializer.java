@@ -3,6 +3,7 @@ package com.artarkatesoft.artpetclinic.bootstrap;
 import com.artarkatesoft.artpetclinic.model.*;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
 import com.artarkatesoft.artpetclinic.services.VetService;
+import com.artarkatesoft.artpetclinic.services.VisitService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ public class DataInitializer implements CommandLineRunner {
 
     private final OwnerService ownerService;
     private final VetService vetService;
+    private final VisitService visitService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -33,6 +35,8 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println(ownerService.findAll());
         System.out.println("--------All Vets------");
         System.out.println(vetService.findAll());
+        System.out.println("--------All Visits------");
+        System.out.println(visitService.findAll());
     }
 
     private void bootstrapOwners() {
@@ -68,7 +72,15 @@ public class DataInitializer implements CommandLineRunner {
 
         owner.getPets().add(pet);
 
-        ownerService.save(owner);
+        owner = ownerService.save(owner);
+
+        Visit visit;
+        visit = new Visit();
+        Pet pet1 = owner.getPets().stream().findFirst().get();
+        visit.setPet(pet1);
+        visit.setDate(LocalDate.now());
+        visit.setDescription("Skin is soft");
+        visitService.save(visit);
 
         owner = new Owner();
         owner.setFirstName("Nazar");
@@ -87,6 +99,14 @@ public class DataInitializer implements CommandLineRunner {
         owner.getPets().add(pet);
 
         ownerService.save(owner);
+
+        visit = new Visit();
+        Pet pet2 = owner.getPets().stream().findFirst().get();
+        visit.setPet(pet2);
+        visit.setDate(LocalDate.now());
+        visit.setDescription("Some headache");
+        visitService.save(visit);
+
     }
 
     private void bootstrapVets() {
