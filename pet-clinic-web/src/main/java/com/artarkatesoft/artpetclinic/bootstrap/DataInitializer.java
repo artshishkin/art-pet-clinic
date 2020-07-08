@@ -36,18 +36,18 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("--------All Vets------");
         System.out.println(vetService.findAll());
         System.out.println("--------All Visits------");
-//        System.out.println(visitService.findAll());
+        System.out.println(visitService.findAll());
     }
 
     private void bootstrapOwners() {
 
         PetType dog = new PetType();
         dog.setName("dog");
-        dog = petTypeService.save(dog);
+//        dog = petTypeService.save(dog);
 
         PetType cat = new PetType();
         cat.setName("cat");
-        cat = petTypeService.save(cat);
+//        cat = petTypeService.save(cat);
 
         Owner owner;
         owner = new Owner();
@@ -100,14 +100,14 @@ public class DataInitializer implements CommandLineRunner {
 
         owner.getPets().add(pet);
 
-        ownerService.save(owner);
+        owner = ownerService.save(owner);
 
-//        visit = new Visit();
-//        Pet pet2 = owner.getPets().stream().findFirst().get();
-//        visit.setPet(pet2);
-//        visit.setDate(LocalDate.now());
-//        visit.setDescription("Some headache");
-//        visitService.save(visit);
+        visit = new Visit();
+        Pet pet2 = owner.getPets().stream().findFirst().get();
+        visit.setPet(pet2);
+        visit.setDate(LocalDate.now());
+        visit.setDescription("Some headache");
+        visitService.save(visit);
 
     }
 
@@ -118,15 +118,15 @@ public class DataInitializer implements CommandLineRunner {
 
         Specialty radiology = new Specialty();
         radiology.setDescription("radiology");
-        radiology = specialtyService.save(radiology);
+//        radiology = specialtyService.save(radiology);
 
         Specialty surgery = new Specialty();
         surgery.setDescription("surgery");
-        surgery = specialtyService.save(surgery);
+//        surgery = specialtyService.save(surgery);
 
         Specialty dentistry = new Specialty();
         dentistry.setDescription("dentistry");
-        dentistry = specialtyService.save(dentistry);
+//        dentistry = specialtyService.save(dentistry);
 
         Vet vet = new Vet();
         vet.setFirstName("Kate");

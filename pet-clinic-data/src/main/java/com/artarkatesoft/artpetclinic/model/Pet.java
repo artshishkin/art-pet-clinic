@@ -17,7 +17,7 @@ import java.util.Set;
 public class Pet extends BaseEntity {
     private String name;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn
     private PetType petType;
 
@@ -28,5 +28,6 @@ public class Pet extends BaseEntity {
     private Owner owner;
 
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Set<Visit> visits = new HashSet<>();
 }
