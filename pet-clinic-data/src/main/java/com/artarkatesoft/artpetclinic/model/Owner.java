@@ -7,20 +7,28 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="owners")
+@Table(name = "owners")
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Owner extends Person {
     @Column(name = "address")
     private String address;
     @Column(name = "city")
     private String city;
-    @Column(name="telephone")
+    @Column(name = "telephone")
     private String telephone;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private Set<Pet> pets = new HashSet<>();
+
+    @Builder
+    public Owner(String firstName, String lastName, String address, String city, String telephone, Set<Pet> pets) {
+        super(firstName, lastName);
+        this.address = address;
+        this.city = city;
+        this.telephone = telephone;
+        this.pets = pets;
+    }
 }

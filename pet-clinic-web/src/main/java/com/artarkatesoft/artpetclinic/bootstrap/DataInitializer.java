@@ -50,12 +50,13 @@ public class DataInitializer implements CommandLineRunner {
 //        cat = petTypeService.save(cat);
 
         Owner owner;
-        owner = new Owner();
-        owner.setFirstName("Art");
-        owner.setLastName("Shyshkin");
-        owner.setAddress("Address 1");
-        owner.setAddress("City 1");
-        owner.setTelephone("1234567");
+        owner = Owner.builder()
+                .firstName("Art")
+                .lastName("Shyshkin")
+                .address("Address 1")
+                .city("City 1")
+                .telephone("1234567")
+                .build();
 
         Pet pet;
         pet = new Pet();
@@ -84,13 +85,13 @@ public class DataInitializer implements CommandLineRunner {
         visit.setDescription("Skin is soft");
         visitService.save(visit);
 
-        owner = new Owner();
-        owner.setFirstName("Nazar");
-        owner.setLastName("Shyshkin");
-        owner.setId(111L);
-        owner.setAddress("Address 2");
-        owner.setAddress("City 2");
-        owner.setTelephone("98765544");
+        owner = Owner.builder()
+                .firstName("Nazar")
+                .lastName("Shyshkin")
+                .address("Address 2")
+                .city("City 2")
+                .telephone("98765544")
+                .build();
 
         pet = new Pet();
         pet.setName("Doggy 2");
