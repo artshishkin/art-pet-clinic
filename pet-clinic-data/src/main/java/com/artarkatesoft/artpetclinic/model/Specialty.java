@@ -1,6 +1,7 @@
 package com.artarkatesoft.artpetclinic.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,9 +11,7 @@ import javax.persistence.Table;
 @Table(name = "specialties")
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Specialty extends BaseEntity {
     @Column(name = "description")
     private String description;

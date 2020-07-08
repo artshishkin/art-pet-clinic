@@ -1,6 +1,7 @@
 package com.artarkatesoft.artpetclinic.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -9,9 +10,7 @@ import java.time.LocalDate;
 @Table(name = "visits")
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString(callSuper = true)
 public class Visit extends BaseEntity {
     @Column(name = "date")

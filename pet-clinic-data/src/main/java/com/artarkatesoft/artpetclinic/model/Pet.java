@@ -1,6 +1,7 @@
 package com.artarkatesoft.artpetclinic.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,9 +12,7 @@ import java.util.Set;
 @Table(name = "pets")
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@SuperBuilder
 @ToString(callSuper = true)
 public class Pet extends BaseEntity {
     private String name;

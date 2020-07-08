@@ -41,72 +41,71 @@ public class DataInitializer implements CommandLineRunner {
 
     private void bootstrapOwners() {
 
-        PetType dog = new PetType();
-        dog.setName("dog");
-//        dog = petTypeService.save(dog);
+        PetType dog = PetType.builder().name("dog").build();
 
-        PetType cat = new PetType();
-        cat.setName("cat");
-//        cat = petTypeService.save(cat);
+        PetType cat = PetType.builder().name("cat").build();
 
         Owner owner;
-        owner = new Owner();
-        owner.setFirstName("Art");
-        owner.setLastName("Shyshkin");
-        owner.setAddress("Address 1");
-        owner.setAddress("City 1");
-        owner.setTelephone("1234567");
+        owner = Owner.builder().firstName("Art")
+                .lastName("Shyshkin")
+                .address("Address 1")
+                .city("City 1")
+                .telephone("1234567")
+                .build();
+
 
         Pet pet;
-        pet = new Pet();
-        pet.setName("Doggy 1");
-        pet.setBirthDate(LocalDate.now());
-        pet.setPetType(dog);
-        pet.setOwner(owner);
+        pet = Pet.builder()
+                .name("Doggy 1")
+                .birthDate(LocalDate.now())
+                .petType(dog)
+                .owner(owner)
+                .build();
 
         owner.getPets().add(pet);
 
-        pet = new Pet();
-        pet.setName("Kitty 1");
-        pet.setBirthDate(LocalDate.now());
-        pet.setPetType(cat);
-        pet.setOwner(owner);
+        pet = Pet.builder()
+                .name("Kitty 1")
+                .birthDate(LocalDate.now())
+                .petType(cat)
+                .owner(owner)
+                .build();
 
         owner.getPets().add(pet);
 
         owner = ownerService.save(owner);
 
         Visit visit;
-        visit = new Visit();
-        Pet pet1 = owner.getPets().stream().findFirst().get();
-        visit.setPet(pet1);
-        visit.setDate(LocalDate.now());
-        visit.setDescription("Skin is soft");
+        visit = Visit.builder()
+                .pet(owner.getPets().stream().findFirst().get())
+                .date(LocalDate.now())
+                .description("Skin is soft")
+                .build();
         visitService.save(visit);
 
-        owner = new Owner();
-        owner.setFirstName("Nazar");
-        owner.setLastName("Shyshkin");
-        owner.setId(111L);
-        owner.setAddress("Address 2");
-        owner.setAddress("City 2");
-        owner.setTelephone("98765544");
+        owner = Owner.builder()
+                .firstName("Nazar")
+                .lastName("Shyshkin")
+                .address("Address 2")
+                .address("City 2")
+                .telephone("98765544")
+                .build();
 
-        pet = new Pet();
-        pet.setName("Doggy 2");
-        pet.setBirthDate(LocalDate.now());
-        pet.setPetType(dog);
-        pet.setOwner(owner);
-
+        pet = Pet.builder()
+                .name("Doggy 2")
+                .birthDate(LocalDate.now())
+                .petType(dog)
+                .owner(owner)
+                .build();
         owner.getPets().add(pet);
 
         owner = ownerService.save(owner);
 
-        visit = new Visit();
-        Pet pet2 = owner.getPets().stream().findFirst().get();
-        visit.setPet(pet2);
-        visit.setDate(LocalDate.now());
-        visit.setDescription("Some headache");
+        visit = Visit.builder()
+                .pet(owner.getPets().stream().findFirst().get())
+                .date(LocalDate.now())
+                .description("Some headache")
+                .build();
         visitService.save(visit);
 
     }
@@ -116,30 +115,27 @@ public class DataInitializer implements CommandLineRunner {
 //        INSERT INTO specialties VALUES (2, 'surgery');
 //        INSERT INTO specialties VALUES (3, 'dentistry');
 
-        Specialty radiology = new Specialty();
-        radiology.setDescription("radiology");
-//        radiology = specialtyService.save(radiology);
+        Specialty radiology = Specialty.builder().description("radiology").build();
 
-        Specialty surgery = new Specialty();
-        surgery.setDescription("surgery");
-//        surgery = specialtyService.save(surgery);
+        Specialty surgery = Specialty.builder().description("surgery").build();
 
-        Specialty dentistry = new Specialty();
-        dentistry.setDescription("dentistry");
-//        dentistry = specialtyService.save(dentistry);
+        Specialty dentistry = Specialty.builder().description("dentistry").build();
 
-        Vet vet = new Vet();
-        vet.setFirstName("Kate");
-        vet.setLastName("Dobryden");
+        Vet vet = Vet.builder()
+                .firstName("Kate")
+                .lastName("Dobryden")
+                .build();
         vet.getSpecialties().add(radiology);
+
         vetService.save(vet);
         vet.getSpecialties().add(dentistry);
         vetService.save(vet);
 
-        vet = new Vet();
-        vet.setFirstName("Arina");
-        vet.setLastName("Shyshkina");
-        vet.setId(222L);
+        vet = Vet.builder()
+                .firstName("Arina")
+                .lastName("Shyshkina")
+                .build();
+
         vet.getSpecialties().add(surgery);
         vetService.save(vet);
     }
