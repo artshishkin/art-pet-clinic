@@ -1,9 +1,7 @@
 package com.artarkatesoft.artpetclinic.bootstrap;
 
 import com.artarkatesoft.artpetclinic.model.*;
-import com.artarkatesoft.artpetclinic.services.OwnerService;
-import com.artarkatesoft.artpetclinic.services.VetService;
-import com.artarkatesoft.artpetclinic.services.VisitService;
+import com.artarkatesoft.artpetclinic.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -17,6 +15,8 @@ public class DataInitializer implements CommandLineRunner {
     private final OwnerService ownerService;
     private final VetService vetService;
     private final VisitService visitService;
+    private final PetTypeService petTypeService;
+    private final SpecialtyService specialtyService;
 
     @Override
     public void run(String... args) throws Exception {
@@ -36,16 +36,18 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("--------All Vets------");
         System.out.println(vetService.findAll());
         System.out.println("--------All Visits------");
-        System.out.println(visitService.findAll());
+//        System.out.println(visitService.findAll());
     }
 
     private void bootstrapOwners() {
 
         PetType dog = new PetType();
         dog.setName("dog");
+        dog = petTypeService.save(dog);
 
         PetType cat = new PetType();
         cat.setName("cat");
+        cat = petTypeService.save(cat);
 
         Owner owner;
         owner = new Owner();
@@ -100,12 +102,12 @@ public class DataInitializer implements CommandLineRunner {
 
         ownerService.save(owner);
 
-        visit = new Visit();
-        Pet pet2 = owner.getPets().stream().findFirst().get();
-        visit.setPet(pet2);
-        visit.setDate(LocalDate.now());
-        visit.setDescription("Some headache");
-        visitService.save(visit);
+//        visit = new Visit();
+//        Pet pet2 = owner.getPets().stream().findFirst().get();
+//        visit.setPet(pet2);
+//        visit.setDate(LocalDate.now());
+//        visit.setDescription("Some headache");
+//        visitService.save(visit);
 
     }
 
@@ -116,12 +118,15 @@ public class DataInitializer implements CommandLineRunner {
 
         Specialty radiology = new Specialty();
         radiology.setDescription("radiology");
+        radiology = specialtyService.save(radiology);
 
         Specialty surgery = new Specialty();
         surgery.setDescription("surgery");
+        surgery = specialtyService.save(surgery);
 
         Specialty dentistry = new Specialty();
         dentistry.setDescription("dentistry");
+        dentistry = specialtyService.save(dentistry);
 
         Vet vet = new Vet();
         vet.setFirstName("Kate");
