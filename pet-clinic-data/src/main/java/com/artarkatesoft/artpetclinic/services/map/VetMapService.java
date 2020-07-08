@@ -5,9 +5,11 @@ import com.artarkatesoft.artpetclinic.model.Vet;
 import com.artarkatesoft.artpetclinic.services.SpecialtyService;
 import com.artarkatesoft.artpetclinic.services.VetService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
+@Profile({"default", "map"})
 @RequiredArgsConstructor
 public class VetMapService extends AbstractMapService<Vet, Long> implements VetService {
 

@@ -2,6 +2,7 @@ package com.artarkatesoft.artpetclinic.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Table(name = "visits")
 @Getter
 @Setter
+@ToString(callSuper = true)
 public class Visit extends BaseEntity {
     @Column(name = "date")
     private LocalDate date;
