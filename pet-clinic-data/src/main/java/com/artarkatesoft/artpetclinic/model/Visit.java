@@ -1,16 +1,17 @@
 package com.artarkatesoft.artpetclinic.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "visits")
-@Getter
 @Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString(callSuper = true)
 public class Visit extends BaseEntity {
     @Column(name = "date")

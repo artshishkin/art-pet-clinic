@@ -1,17 +1,13 @@
 package com.artarkatesoft.artpetclinic.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @MappedSuperclass
-@Data
-@EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
+@Setter
+@Getter
 @ToString(callSuper = true)
 public class Person extends BaseEntity {
 

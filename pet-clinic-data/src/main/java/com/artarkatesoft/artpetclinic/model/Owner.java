@@ -1,7 +1,6 @@
 package com.artarkatesoft.artpetclinic.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -9,8 +8,11 @@ import java.util.Set;
 
 @Entity
 @Table(name="owners")
-@Getter
 @Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Owner extends Person {
     @Column(name = "address")
     private String address;

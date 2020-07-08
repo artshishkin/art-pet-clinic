@@ -1,8 +1,6 @@
 package com.artarkatesoft.artpetclinic.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -11,8 +9,11 @@ import java.util.Set;
 
 @Entity
 @Table(name = "pets")
-@Data
-@EqualsAndHashCode(callSuper = true)
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString(callSuper = true)
 public class Pet extends BaseEntity {
     private String name;
