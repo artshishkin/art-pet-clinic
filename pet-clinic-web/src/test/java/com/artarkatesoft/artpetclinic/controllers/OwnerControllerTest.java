@@ -4,6 +4,10 @@ import com.artarkatesoft.artpetclinic.model.Owner;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -11,6 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.Collections;
 
@@ -23,15 +28,18 @@ import static org.springframework.test.web.servlet.ResultMatcher.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(OwnerController.class)
+@ExtendWith(MockitoExtension.class)
 class OwnerControllerTest {
 
-    @Autowired
-    MockMvc mockMvc;
-    //WebMvcTest - 1063ms
+    private MockMvc mockMvc;
+    //@WebMvcTest - 1063ms
+    //mockMvc = MockMvcBuilders.standaloneSetup(ownerController).build(); - 3032ms
 
-    @MockBean
+    @Mock
     OwnerService ownerService;
+
+    @InjectMocks
+    OwnerController ownerController;
 
     private Owner owner;
 
@@ -45,6 +53,8 @@ class OwnerControllerTest {
                 .telephone("123")
                 .build();
         owner.setId(1L);
+
+        mockMvc = MockMvcBuilders.standaloneSetup(ownerController).build();
     }
 
     @Test
