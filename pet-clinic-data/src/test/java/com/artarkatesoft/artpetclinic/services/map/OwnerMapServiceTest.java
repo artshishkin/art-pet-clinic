@@ -1,33 +1,23 @@
 package com.artarkatesoft.artpetclinic.services.map;
 
 import com.artarkatesoft.artpetclinic.model.Owner;
-import com.artarkatesoft.artpetclinic.services.PetService;
-import com.artarkatesoft.artpetclinic.services.PetTypeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(MockitoExtension.class)
 class OwnerMapServiceTest {
 
-    @InjectMocks
     OwnerMapService ownerMapService;
-
-    @Mock
-    PetService petService;
-    @Mock
-    PetTypeService petTypeService;
+    //with Mockito 4328ms
+    //without Mockito 676ms
 
     @BeforeEach
     void setUp() {
+        ownerMapService = new OwnerMapService(new PetMapService(), new PetTypeMapService());
         Owner owner = Owner.builder()
                 .address("addr1")
                 .city("city1")
