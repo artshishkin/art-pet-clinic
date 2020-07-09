@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
 @Service
 @Profile({"default", "map"})
 @RequiredArgsConstructor
@@ -20,13 +22,17 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
 
     @Override
     public Owner findByLastName(String lastName) {
-        return this.findAll().stream().filter(owner -> owner.getLastName().equals(lastName)).findFirst().orElse(null);
+        return this.findAll()
+                .stream()
+                .filter(owner -> owner.getLastName().equals(lastName))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
     public Owner save(Owner owner) {
 
-        if (owner == null) return null;
+        Objects.requireNonNull(owner, "Owner cannot be null");
 
         owner.getPets().forEach(pet -> {
             if (pet == null) throw new RuntimeException("Pet shold not be null");
