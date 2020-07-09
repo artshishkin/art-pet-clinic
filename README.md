@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/artshishkin/art-pet-clinic.svg?style=svg)](https://circleci.com/gh/artshishkin/art-pet-clinic)
+
 #ART Pet Clinic
 
 ##SFG Tutorial: Spring 5
