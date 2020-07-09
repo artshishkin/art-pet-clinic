@@ -11,7 +11,7 @@ import java.util.Set;
 @Setter
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
+@ToString(callSuper = true)
 public class Owner extends Person {
     @Column(name = "address")
     private String address;
@@ -21,6 +21,7 @@ public class Owner extends Person {
     private String telephone;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Set<Pet> pets = new HashSet<>();
 
     @Builder

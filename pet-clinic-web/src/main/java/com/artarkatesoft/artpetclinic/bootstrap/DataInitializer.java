@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
 import java.time.LocalDate;
 
 @Component
@@ -20,7 +19,7 @@ public class DataInitializer implements CommandLineRunner {
     private final SpecialtyService specialtyService;
 
     @Override
-    @Transactional
+//    @Transactional
     public void run(String... args) throws Exception {
 
         boolean dataLoaded = !ownerService.findAll().isEmpty();
@@ -45,11 +44,11 @@ public class DataInitializer implements CommandLineRunner {
 
         PetType dog = new PetType();
         dog.setName("dog");
-//        dog = petTypeService.save(dog);
+        dog = petTypeService.save(dog);
 
         PetType cat = new PetType();
         cat.setName("cat");
-//        cat = petTypeService.save(cat);
+        cat = petTypeService.save(cat);
 
         Owner owner;
         owner = Owner.builder()
@@ -121,21 +120,21 @@ public class DataInitializer implements CommandLineRunner {
 
         Specialty radiology = new Specialty();
         radiology.setDescription("radiology");
-//        radiology = specialtyService.save(radiology);
+        radiology = specialtyService.save(radiology);
 
         Specialty surgery = new Specialty();
         surgery.setDescription("surgery");
-//        surgery = specialtyService.save(surgery);
+        surgery = specialtyService.save(surgery);
 
         Specialty dentistry = new Specialty();
         dentistry.setDescription("dentistry");
-//        dentistry = specialtyService.save(dentistry);
+        dentistry = specialtyService.save(dentistry);
 
         Vet vet = new Vet();
         vet.setFirstName("Kate");
         vet.setLastName("Dobryden");
         vet.getSpecialties().add(radiology);
-        vetService.save(vet);
+//        vetService.save(vet);
         vet.getSpecialties().add(dentistry);
         vetService.save(vet);
 

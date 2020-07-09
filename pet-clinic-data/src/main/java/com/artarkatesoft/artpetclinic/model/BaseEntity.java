@@ -1,7 +1,9 @@
 package com.artarkatesoft.artpetclinic.model;
 
 
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,7 +14,7 @@ import java.io.Serializable;
 @MappedSuperclass
 @Setter
 @Getter
-@NoArgsConstructor
+@ToString
 public class BaseEntity implements Serializable {
 
     @Id

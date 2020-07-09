@@ -1,6 +1,9 @@
 package com.artarkatesoft.artpetclinic.model;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -10,9 +13,7 @@ import javax.persistence.Table;
 @EqualsAndHashCode(callSuper = true)
 @Setter
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
+@ToString(callSuper = true)
 public class PetType extends BaseEntity {
     private String name;
 }
