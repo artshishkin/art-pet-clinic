@@ -3,7 +3,10 @@ package com.artarkatesoft.artpetclinic.controllers;
 import com.artarkatesoft.artpetclinic.model.Owner;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
 import org.hamcrest.CoreMatchers;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -12,13 +15,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.ResultMatcher.matchAll;
@@ -39,6 +42,7 @@ class OwnerControllerTest {
     OwnerController ownerController;
 
     private Owner defaultOwner;
+    private List<Owner> defaultOwnerList;
 
     @BeforeEach
     void setUp() {
@@ -51,27 +55,31 @@ class OwnerControllerTest {
                 .build();
         defaultOwner.setId(1L);
 
+        Owner secondDefaultOwner = Owner.builder()
+                .firstName("Arina")
+                .lastName("Shyshkina")
+                .city("City1")
+                .address("Address1")
+                .telephone("321")
+                .build();
+        secondDefaultOwner.setId(2L);
+        defaultOwnerList = new ArrayList<>();
+        defaultOwnerList.add(defaultOwner);
+        defaultOwnerList.add(secondDefaultOwner);
+
         mockMvc = MockMvcBuilders.standaloneSetup(ownerController).build();
     }
 
     @Test
-    void list() throws Exception {
-        given(ownerService.findAll()).willReturn(Collections.singleton(defaultOwner));
-        mockMvc.perform(get("/owners"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("owners/index"))
-                .andExpect(model().attributeExists("owners"))
-                .andExpect(model().attribute("owners", hasSize(1)));
-        then(ownerService).should().findAll();
-    }
-
-    @Test
     void find() throws Exception {
+        //when
         mockMvc.perform(get("/owners/find"))
                 .andExpect(matchAll(
                         status().isOk(),
-                        view().name("not_implemented")
+                        view().name("owners/findOwners"),
+                        model().attributeExists("owner")
                 ));
+        //then
         then(ownerService).shouldHaveNoInteractions();
     }
 
@@ -92,4 +100,83 @@ class OwnerControllerTest {
         //then
         then(ownerService).should().findById(eq(ownerId));
     }
+
+    @Nested
+    @DisplayName("processing find form")
+    class ProcessFindForm {
+
+        private String lastNameLike;
+
+        @BeforeEach
+        void setUp() {
+            lastNameLike = "shkina";
+        }
+
+        @Test
+        @DisplayName("when there is no query param for lastName should return ALL owners")
+        void testProcessFindForm_requestEmptyOwner() throws Exception {
+            //given
+            given(ownerService.findAllByLastNameLike(anyString())).willReturn(defaultOwnerList);
+            //when
+            mockMvc.perform(get("/owners"))
+                    //then
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("owners/ownersList"))
+                    .andExpect(model().attributeExists("selections"))
+                    .andExpect(model().attribute("selections", Matchers.iterableWithSize(defaultOwnerList.size())));
+            then(ownerService).should().findAllByLastNameLike(eq(""));
+        }
+
+        @Test
+        @DisplayName("when results NOT found")
+        void testProcessFindForm_resultNone() throws Exception {
+            //given
+            given(ownerService.findAllByLastNameLike(anyString())).willReturn(Collections.emptyList());
+            //when
+            mockMvc
+                    .perform(
+                            get("/owners")
+                                    .param("lastName", lastNameLike))
+                    //then
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("owners/findOwners"))
+                    .andExpect(model().hasErrors())
+                    .andExpect(model().attributeHasFieldErrorCode("owner", "lastName", "notFound"));
+            then(ownerService).should().findAllByLastNameLike(eq(lastNameLike));
+        }
+
+        @Test
+        @DisplayName("when found ONE result")
+        void testProcessFindForm_resultOne() throws Exception {
+            //given
+            given(ownerService.findAllByLastNameLike(anyString())).willReturn(Collections.singletonList(defaultOwner));
+            //when
+            mockMvc.perform(get("/owners").param("lastName", lastNameLike))
+                    //then
+                    .andExpect(status().is3xxRedirection())
+                    .andExpect(redirectedUrlTemplate("/owners/{ownerId}", defaultOwner.getId()));
+            //then
+            then(ownerService).should().findAllByLastNameLike(eq(lastNameLike));
+        }
+
+        @Test
+        @DisplayName("when found MANY results")
+        void testProcessFindForm_resultMany() throws Exception {
+            //given
+            given(ownerService.findAllByLastNameLike(anyString())).willReturn(defaultOwnerList);
+            //when
+            mockMvc
+                    .perform(
+                            get("/owners")
+                                    .param("lastName", lastNameLike))
+                    //then
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("owners/ownersList"))
+                    .andExpect(model().attributeExists("selections"))
+                    .andExpect(model().attribute("selections", Matchers.iterableWithSize(defaultOwnerList.size())));
+            //then
+            then(ownerService).should().findAllByLastNameLike(eq(lastNameLike));
+        }
+    }
+
 }

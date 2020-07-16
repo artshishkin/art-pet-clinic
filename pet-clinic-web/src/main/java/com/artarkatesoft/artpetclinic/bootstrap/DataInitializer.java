@@ -43,11 +43,11 @@ public class DataInitializer implements CommandLineRunner {
     private void bootstrapOwners() {
 
         PetType dog = new PetType();
-        dog.setName("dog");
+        dog.setName("Dog");
         dog = petTypeService.save(dog);
 
         PetType cat = new PetType();
-        cat.setName("cat");
+        cat.setName("Cat");
         cat = petTypeService.save(cat);
 
         Owner owner;
@@ -87,8 +87,8 @@ public class DataInitializer implements CommandLineRunner {
         visitService.save(visit);
 
         owner = Owner.builder()
-                .firstName("Nazar")
-                .lastName("Shyshkin")
+                .firstName("Tanya")
+                .lastName("Shyshkina")
                 .address("Address 2")
                 .city("City 2")
                 .telephone("98765544")
