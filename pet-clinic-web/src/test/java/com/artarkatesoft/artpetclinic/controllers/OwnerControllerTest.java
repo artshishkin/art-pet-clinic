@@ -9,9 +9,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.stubbing.Answer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.*;
@@ -26,6 +30,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 import static org.springframework.test.web.servlet.ResultMatcher.matchAll;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,6 +45,9 @@ class OwnerControllerTest {
 
     @InjectMocks
     OwnerController ownerController;
+
+    @Captor
+    ArgumentCaptor<Owner> ownerCaptor;
 
     private Owner defaultOwner;
     private List<Owner> defaultOwnerList;
@@ -178,5 +186,45 @@ class OwnerControllerTest {
             then(ownerService).should().findAllByLastNameLike(eq(lastNameLike));
         }
     }
+
+    @Test
+    void initCreationForm() throws Exception {
+        //when
+        mockMvc.perform(get("/owners/new"))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(view().name(OwnerController.CREATE_OR_UPDATE_OWNER_FORM))
+                .andExpect(model().attributeExists("owner"));
+    }
+
+    @Test
+    void processCreationForm() throws Exception {
+        //given
+        final Long ownerId = defaultOwner.getId();
+        given(ownerService.save(any(Owner.class)))
+                .willAnswer((Answer<Owner>) invocation -> {
+                    Owner owner = invocation.getArgument(0, Owner.class);
+                    owner.setId(ownerId);
+                    return null;
+                });
+        //when
+        mockMvc
+                .perform(
+                        post("/owners/new")
+                                .param("firstName", defaultOwner.getFirstName())
+                                .param("lastName", defaultOwner.getLastName())
+                                .param("city", defaultOwner.getCity())
+                                .param("address", defaultOwner.getAddress())
+                                .param("telephone", defaultOwner.getTelephone())
+                )
+                //then
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/owners/{ownerId}", ownerId));
+        then(ownerService).should().save(ownerCaptor.capture());
+        Owner savedOwner = ownerCaptor.getValue();
+        assertThat(savedOwner).isEqualToIgnoringNullFields(defaultOwner);
+
+    }
+
 
 }

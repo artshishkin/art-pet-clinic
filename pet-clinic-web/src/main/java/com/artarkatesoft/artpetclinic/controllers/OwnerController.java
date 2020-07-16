@@ -3,12 +3,10 @@ package com.artarkatesoft.artpetclinic.controllers;
 import com.artarkatesoft.artpetclinic.model.Owner;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -18,6 +16,7 @@ import java.util.Map;
 @RequestMapping("owners")
 public class OwnerController {
 
+    static final String CREATE_OR_UPDATE_OWNER_FORM = "owners/createOrUpdateOwnerForm";
     private final OwnerService ownerService;
 
     public OwnerController(OwnerService ownerService) {
@@ -71,6 +70,23 @@ public class OwnerController {
             // multiple owners found
             model.put("selections", results);
             return "owners/ownersList";
+        }
+    }
+
+    @GetMapping("new")
+    public String initCreationForm(Model model) {
+        model.addAttribute("owner", Owner.builder().build());
+        return CREATE_OR_UPDATE_OWNER_FORM;
+    }
+
+    @PostMapping("new")
+    public String processCreationForm(Owner owner, BindingResult result) {
+        if (result.hasErrors()) {
+            return CREATE_OR_UPDATE_OWNER_FORM;
+        }
+        else {
+            ownerService.save(owner);
+            return "redirect:/owners/" + owner.getId();
         }
     }
 
