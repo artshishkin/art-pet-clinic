@@ -1,17 +1,19 @@
 package com.artarkatesoft.artpetclinic.controllers;
 
 import com.artarkatesoft.artpetclinic.model.Owner;
+import com.artarkatesoft.artpetclinic.model.Pet;
 import com.artarkatesoft.artpetclinic.model.PetType;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
 import com.artarkatesoft.artpetclinic.services.PetTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.Collection;
 
 @Controller
@@ -19,6 +21,7 @@ import java.util.Collection;
 @RequiredArgsConstructor
 public class PetController {
 
+    static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
     private final PetTypeService petTypeService;
     private final OwnerService ownerService;
 
@@ -35,6 +38,34 @@ public class PetController {
     @InitBinder("owner")
     public void initOwnerBinder(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("id");
+    }
+
+    @GetMapping("pets/new")
+    public String initCreationForm(Owner owner, Model model) {
+        Pet pet = Pet.builder().build();
+//        owner.addPet(pet);
+        pet.setOwner(owner);
+        model.addAttribute("pet", pet);
+        return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+    }
+
+    @PostMapping("pets/new")
+    public String processCreationForm(Owner owner, @Valid Pet pet, BindingResult result, Model model) {
+        if (StringUtils.hasLength(pet.getName()) && pet.isNew()) {
+            String petName = pet.getName();
+            if (owner.getPets().stream().map(Pet::getName).anyMatch(petName::equals)) {
+                result.rejectValue("name", "duplicate", "already exists");
+            }
+        }
+        if (result.hasErrors()) {
+            model.addAttribute("pet", pet);
+            pet.setOwner(owner);
+            return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+        } else {
+            owner.addPet(pet);
+            ownerService.save(owner);
+            return "redirect:/owners/{ownerId}";
+        }
     }
 
 }
