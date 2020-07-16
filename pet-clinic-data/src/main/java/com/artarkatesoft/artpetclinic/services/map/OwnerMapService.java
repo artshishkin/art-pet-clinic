@@ -44,7 +44,7 @@ public class OwnerMapService extends AbstractMapService<Owner, Long> implements 
         Objects.requireNonNull(owner, "Owner cannot be null");
 
         owner.getPets().forEach(pet -> {
-            if (pet == null) throw new RuntimeException("Pet shold not be null");
+            if (pet == null) throw new RuntimeException("Pet should not be null");
             PetType petType = pet.getPetType();
             if (petType == null) throw new RuntimeException("PetType should not be null");
             if (petType.getId() == null) {
