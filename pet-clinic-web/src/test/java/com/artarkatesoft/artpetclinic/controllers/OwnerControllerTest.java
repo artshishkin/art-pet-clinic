@@ -105,13 +105,11 @@ class OwnerControllerTest {
     @DisplayName("processing find form")
     class ProcessFindForm {
 
-        private String lastName;
         private String lastNameLike;
 
         @BeforeEach
         void setUp() {
-            lastName = "shkina";
-            lastNameLike = "%" + lastName + "%";
+            lastNameLike = "shkina";
         }
 
         @Test
