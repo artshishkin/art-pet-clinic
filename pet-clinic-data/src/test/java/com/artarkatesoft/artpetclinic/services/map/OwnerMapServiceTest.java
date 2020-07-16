@@ -4,6 +4,8 @@ import com.artarkatesoft.artpetclinic.model.Owner;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -131,5 +133,26 @@ class OwnerMapServiceTest {
         final String lastName = "Hoola";
         Owner owner = ownerMapService.findByLastName(lastName);
         assertNull(owner);
+    }
+
+    @Test
+    void findAllByLastNameLikeOneMatch() {
+        String lastName = "kina";
+        List<Owner> owners = ownerMapService.findAllByLastNameLike(lastName);
+        assertThat(owners).hasSize(1);
+    }
+
+    @Test
+    void findAllByLastNameLikeAllMatch() {
+        String lastName = "kin";
+        Collection<Owner> owners = ownerMapService.findAllByLastNameLike(lastName);
+        assertThat(owners).hasSameSizeAs(ownerMapService.map.values());
+    }
+
+    @Test
+    void findAllByLastNameLikeNoMatch() {
+        String lastName = "foo_bar";
+        Collection<Owner> owners = ownerMapService.findAllByLastNameLike(lastName);
+        assertThat(owners).isEmpty();
     }
 }

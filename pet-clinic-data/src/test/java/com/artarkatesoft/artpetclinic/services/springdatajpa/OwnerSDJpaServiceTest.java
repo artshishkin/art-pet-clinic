@@ -108,15 +108,25 @@ class OwnerSDJpaServiceTest {
     @Test
     void findByLastName() {
         //given
-        given(repository.findByLastName(anyString())).willReturn(owner);
+        given(repository.findOneByLastName(anyString())).willReturn(owner);
         final String lastName = owner.getLastName();
 
         //when
         Owner foundOwner = service.findByLastName(lastName);
 
         //then
-        then(repository).should().findByLastName(eq(lastName));
+        then(repository).should().findOneByLastName(eq(lastName));
         then(repository).shouldHaveNoMoreInteractions();
         assertEquals(owner.getLastName(), foundOwner.getLastName());
+    }
+
+    @Test
+    void findAllByLastNameLike() {
+        //given
+        String lastName = "foo";
+        //when
+        service.findAllByLastNameLike(lastName);
+        //then
+        then(repository).should().findAllByLastNameLike(eq(lastName));
     }
 }
