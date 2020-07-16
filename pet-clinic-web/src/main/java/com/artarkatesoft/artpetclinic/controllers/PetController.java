@@ -4,6 +4,7 @@ import com.artarkatesoft.artpetclinic.model.Owner;
 import com.artarkatesoft.artpetclinic.model.Pet;
 import com.artarkatesoft.artpetclinic.model.PetType;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
+import com.artarkatesoft.artpetclinic.services.PetService;
 import com.artarkatesoft.artpetclinic.services.PetTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,8 @@ import java.util.Collection;
 public class PetController {
 
     static final String VIEWS_PETS_CREATE_OR_UPDATE_FORM = "pets/createOrUpdatePetForm";
+
+    private final PetService petService;
     private final PetTypeService petTypeService;
     private final OwnerService ownerService;
 
@@ -64,6 +67,27 @@ public class PetController {
         } else {
             owner.addPet(pet);
             ownerService.save(owner);
+            return "redirect:/owners/{ownerId}";
+        }
+    }
+
+    @GetMapping("/pets/{petId}/edit")
+    public String initUpdateForm(@PathVariable("petId") Long petId, Model model) {
+        Pet pet = petService.findById(petId);
+        model.addAttribute("pet", pet);
+        return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+    }
+
+    @PostMapping("/pets/{petId}/edit")
+    public String processUpdateForm(@Valid Pet pet, BindingResult result, Owner owner, Model model) {
+        if (result.hasErrors()) {
+            pet.setOwner(owner);
+            model.addAttribute("pet", pet);
+            return VIEWS_PETS_CREATE_OR_UPDATE_FORM;
+        }
+        else {
+            owner.addPet(pet);
+            petService.save(pet);
             return "redirect:/owners/{ownerId}";
         }
     }

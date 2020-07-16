@@ -4,6 +4,7 @@ import com.artarkatesoft.artpetclinic.model.Owner;
 import com.artarkatesoft.artpetclinic.model.Pet;
 import com.artarkatesoft.artpetclinic.model.PetType;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
+import com.artarkatesoft.artpetclinic.services.PetService;
 import com.artarkatesoft.artpetclinic.services.PetTypeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,6 +42,9 @@ class PetControllerTest {
     @Mock
     OwnerService ownerService;
 
+    @Mock
+    PetService petService;
+
     @InjectMocks
     PetController petController;
 
@@ -51,6 +55,8 @@ class PetControllerTest {
 
     @Captor
     ArgumentCaptor<Owner> ownerCaptor;
+    @Captor
+    ArgumentCaptor<Pet> petCaptor;
 
     @BeforeEach
     void setUp() {
@@ -120,5 +126,64 @@ class PetControllerTest {
                         ));
     }
 
+    @Test
+    @DisplayName("GETting form to Update new pet")
+    void initUpdateForm() throws Exception {
+        //given
+        Long ownerId = owner.getId();
+        PetType petType = petTypes.iterator().next();
+        Pet pet = Pet.builder().petType(petType).name("Old").owner(owner).build();
+        Long petId = 3L;
+        pet.setId(petId);
+        given(petService.findById(anyLong())).willReturn(pet);
+        //when
+        mockMvc.perform(get("/owners/{ownerId}/pets/{petId}/edit", ownerId, petId))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("owner", "pet"))
+                .andExpect(view().name(PetController.VIEWS_PETS_CREATE_OR_UPDATE_FORM));
+        //then
+        then(ownerService).should().findById(eq(ownerId));
+    }
+
+    @Test
+    @DisplayName("POSTing form to Update a pet")
+    void processUpdateForm() throws Exception {
+        //given
+        Long ownerId = 1L;
+        Owner owner = Owner.builder().build();
+        owner.setId(ownerId);
+        given(ownerService.findById(anyLong())).willReturn(owner);
+        Pet pet = Pet.builder()
+                .name("Kuzya")
+                .petType(petTypes.iterator().next())
+                .birthDate(LocalDate.now())
+                .owner(owner)
+                .build();
+        Long petId = 3L;
+        pet.setId(petId);
+        //when
+        mockMvc
+                .perform(
+                        post("/owners/{ownerId}/pets/{petId}/edit", ownerId, petId)
+                                .param("name", pet.getName())
+                                .param("id", pet.getId().toString())
+//                                .param("birthDate", pet.getBirthDate().toString())
+                                .param("petType.id", pet.getPetType().getId().toString())
+                                .param("petType.name", pet.getPetType().getName())
+                )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/owners/{ownerId}", ownerId));
+
+        //then
+        then(ownerService).should().findById(eq(ownerId));
+        then(petService).should().save(petCaptor.capture());
+        Pet captorValue = petCaptor.getValue();
+        assertThat(captorValue.getId()).isEqualTo(petId);
+        assertAll(
+                () -> assertThat(captorValue.getName()).isEqualTo(pet.getName()),
+                () -> assertThat(captorValue.getPetType()).isEqualToComparingFieldByField(pet.getPetType()),
+                () -> assertThat(captorValue.getOwner().getId()).isEqualTo(pet.getOwner().getId())
+        );
+    }
 
 }
