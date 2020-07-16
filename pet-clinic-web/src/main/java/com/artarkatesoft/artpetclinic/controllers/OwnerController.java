@@ -9,6 +9,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import java.util.Map;
 @RequestMapping("owners")
 public class OwnerController {
 
-    static final String CREATE_OR_UPDATE_OWNER_FORM = "owners/createOrUpdateOwnerForm";
+    static final String VIEWS_OWNER_CREATE_OR_UPDATE_FORM = "owners/createOrUpdateOwnerForm";
     private final OwnerService ownerService;
 
     public OwnerController(OwnerService ownerService) {
@@ -76,16 +77,16 @@ public class OwnerController {
     @GetMapping("new")
     public String initCreationForm(Model model) {
         model.addAttribute("owner", Owner.builder().build());
-        return CREATE_OR_UPDATE_OWNER_FORM;
+        return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
     @PostMapping("new")
-    public String processCreationForm(Owner owner, BindingResult result) {
+    public String processCreationForm(@Valid Owner owner, BindingResult result) {
         if (result.hasErrors()) {
-            return CREATE_OR_UPDATE_OWNER_FORM;
+            return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {
-            ownerService.save(owner);
-            return "redirect:/owners/" + owner.getId();
+            Owner savedOwner = ownerService.save(owner);
+            return "redirect:/owners/" + savedOwner.getId();
         }
     }
 
@@ -93,13 +94,13 @@ public class OwnerController {
     public String initUpdateForm(@PathVariable("ownerId") Long ownerId, Model model) {
         Owner owner = ownerService.findById(ownerId);
         model.addAttribute("owner", owner);
-        return CREATE_OR_UPDATE_OWNER_FORM;
+        return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
     }
 
     @PostMapping("{ownerId}/edit")
     public String processUpdateForm(@PathVariable("ownerId") Long ownerId, Owner owner, BindingResult result) {
         if (result.hasErrors()) {
-            return CREATE_OR_UPDATE_OWNER_FORM;
+            return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
         } else {
             Owner ownerInRepo = ownerService.findById(ownerId);
             if (ownerInRepo == null) throw new RuntimeException("Owner with id: " + ownerId + " not found");

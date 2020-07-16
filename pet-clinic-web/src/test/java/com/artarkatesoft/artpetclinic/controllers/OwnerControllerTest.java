@@ -193,7 +193,7 @@ class OwnerControllerTest {
         mockMvc.perform(get("/owners/new"))
                 //then
                 .andExpect(status().isOk())
-                .andExpect(view().name(OwnerController.CREATE_OR_UPDATE_OWNER_FORM))
+                .andExpect(view().name(OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM))
                 .andExpect(model().attributeExists("owner"));
         then(ownerService).shouldHaveNoInteractions();
     }
@@ -206,7 +206,7 @@ class OwnerControllerTest {
                 .willAnswer((Answer<Owner>) invocation -> {
                     Owner owner = invocation.getArgument(0, Owner.class);
                     owner.setId(ownerId);
-                    return null;
+                    return owner;
                 });
         //when
         mockMvc
@@ -236,7 +236,7 @@ class OwnerControllerTest {
         mockMvc.perform(get("/owners/{ownerId}/edit", ownerId))
                 //then
                 .andExpect(status().isOk())
-                .andExpect(view().name(OwnerController.CREATE_OR_UPDATE_OWNER_FORM))
+                .andExpect(view().name(OwnerController.VIEWS_OWNER_CREATE_OR_UPDATE_FORM))
                 .andExpect(model().attributeExists("owner"))
                 .andExpect(model().attribute("owner", equalTo(defaultOwner)));
         then(ownerService).should().findById(eq(ownerId));
@@ -251,7 +251,7 @@ class OwnerControllerTest {
                 .willAnswer((Answer<Owner>) invocation -> {
                     Owner owner = invocation.getArgument(0, Owner.class);
                     owner.setId(ownerId);
-                    return null;
+                    return owner;
                 });
         //when
         mockMvc
