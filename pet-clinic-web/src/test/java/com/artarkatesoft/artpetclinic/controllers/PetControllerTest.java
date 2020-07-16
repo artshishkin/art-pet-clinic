@@ -114,16 +114,14 @@ class PetControllerTest {
 
         //then
         then(ownerService).should().findById(eq(ownerId));
-        then(ownerService).should().save(ownerCaptor.capture());
-        Owner captorValue = ownerCaptor.getValue();
-        assertThat(captorValue.getId()).isEqualTo(ownerId);
-        assertThat(captorValue.getPets())
-                .hasOnlyOneElementSatisfying(
-                        p -> assertAll(
-                                () -> assertThat(p.getName()).isEqualTo(pet.getName()),
-                                () -> assertThat(p.getPetType()).isEqualToComparingFieldByField(pet.getPetType()),
-                                () -> assertThat(p.getOwner().getId()).isEqualTo(pet.getOwner().getId())
-                        ));
+        then(petService).should().save(petCaptor.capture());
+        Pet captorValue = petCaptor.getValue();
+        assertThat(captorValue.getOwner().getId()).isEqualTo(ownerId);
+        assertAll(
+                () -> assertThat(captorValue.getName()).isEqualTo(pet.getName()),
+                () -> assertThat(captorValue.getPetType()).isEqualToComparingFieldByField(pet.getPetType()),
+                () -> assertThat(captorValue.getOwner().getId()).isEqualTo(pet.getOwner().getId())
+        );
     }
 
     @Test
