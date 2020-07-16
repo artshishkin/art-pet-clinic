@@ -23,8 +23,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -195,13 +195,14 @@ class OwnerControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name(OwnerController.CREATE_OR_UPDATE_OWNER_FORM))
                 .andExpect(model().attributeExists("owner"));
+        then(ownerService).shouldHaveNoInteractions();
     }
 
     @Test
     void processCreationForm() throws Exception {
         //given
         final Long ownerId = defaultOwner.getId();
-        given(ownerService.save(any(Owner.class)))
+        given(ownerService.save(any()))
                 .willAnswer((Answer<Owner>) invocation -> {
                     Owner owner = invocation.getArgument(0, Owner.class);
                     owner.setId(ownerId);
@@ -211,6 +212,51 @@ class OwnerControllerTest {
         mockMvc
                 .perform(
                         post("/owners/new")
+                                .param("firstName", defaultOwner.getFirstName())
+                                .param("lastName", defaultOwner.getLastName())
+                                .param("city", defaultOwner.getCity())
+                                .param("address", defaultOwner.getAddress())
+                                .param("telephone", defaultOwner.getTelephone())
+                )
+                //then
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrlTemplate("/owners/{ownerId}", ownerId));
+        then(ownerService).should().save(ownerCaptor.capture());
+        Owner savedOwner = ownerCaptor.getValue();
+        assertThat(savedOwner).isEqualToIgnoringNullFields(defaultOwner);
+
+    }
+
+    @Test
+    void initUpdateForm() throws Exception {
+        //given
+        Long ownerId = defaultOwner.getId();
+        given(ownerService.findById(anyLong())).willReturn(defaultOwner);
+        //when
+        mockMvc.perform(get("/owners/{ownerId}/edit", ownerId))
+                //then
+                .andExpect(status().isOk())
+                .andExpect(view().name(OwnerController.CREATE_OR_UPDATE_OWNER_FORM))
+                .andExpect(model().attributeExists("owner"))
+                .andExpect(model().attribute("owner", equalTo(defaultOwner)));
+        then(ownerService).should().findById(eq(ownerId));
+    }
+
+    @Test
+    void processUpdateForm() throws Exception {
+        //given
+        final Long ownerId = defaultOwner.getId();
+        given(ownerService.findById(anyLong())).willReturn(defaultOwner);
+        given(ownerService.save(any()))
+                .willAnswer((Answer<Owner>) invocation -> {
+                    Owner owner = invocation.getArgument(0, Owner.class);
+                    owner.setId(ownerId);
+                    return null;
+                });
+        //when
+        mockMvc
+                .perform(
+                        post("/owners/{ownerId}/edit", ownerId)
                                 .param("firstName", defaultOwner.getFirstName())
                                 .param("lastName", defaultOwner.getLastName())
                                 .param("city", defaultOwner.getCity())

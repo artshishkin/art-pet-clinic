@@ -83,10 +83,30 @@ public class OwnerController {
     public String processCreationForm(Owner owner, BindingResult result) {
         if (result.hasErrors()) {
             return CREATE_OR_UPDATE_OWNER_FORM;
-        }
-        else {
+        } else {
             ownerService.save(owner);
             return "redirect:/owners/" + owner.getId();
+        }
+    }
+
+    @GetMapping("{ownerId}/edit")
+    public String initUpdateForm(@PathVariable("ownerId") Long ownerId, Model model) {
+        Owner owner = ownerService.findById(ownerId);
+        model.addAttribute("owner", owner);
+        return CREATE_OR_UPDATE_OWNER_FORM;
+    }
+
+    @PostMapping("{ownerId}/edit")
+    public String processUpdateForm(@PathVariable("ownerId") Long ownerId, Owner owner, BindingResult result) {
+        if (result.hasErrors()) {
+            return CREATE_OR_UPDATE_OWNER_FORM;
+        } else {
+            Owner ownerInRepo = ownerService.findById(ownerId);
+            if (ownerInRepo == null) throw new RuntimeException("Owner with id: " + ownerId + " not found");
+
+            owner.setId(ownerId);
+            ownerService.save(owner);
+            return "redirect:/owners/{ownerId}";
         }
     }
 
