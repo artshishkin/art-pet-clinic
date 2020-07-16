@@ -3,7 +3,6 @@ package com.artarkatesoft.artpetclinic.controllers;
 import com.artarkatesoft.artpetclinic.model.Owner;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Controller
 @RequestMapping("owners")
@@ -29,13 +27,6 @@ public class OwnerController {
     @InitBinder
     public void setAllowedFields(WebDataBinder dataBinder) {
         dataBinder.setDisallowedFields("id");
-    }
-
-    @RequestMapping({ "index", "index.html"})
-    public String list(Model model) {
-        Set<Owner> owners = ownerService.findAll();
-        model.addAttribute("owners", owners);
-        return "owners/index";
     }
 
     /**

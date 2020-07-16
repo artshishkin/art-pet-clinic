@@ -21,7 +21,6 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -69,17 +68,6 @@ class OwnerControllerTest {
         defaultOwnerList.add(secondDefaultOwner);
 
         mockMvc = MockMvcBuilders.standaloneSetup(ownerController).build();
-    }
-
-    @Test
-    void testListIndex() throws Exception {
-        given(ownerService.findAll()).willReturn(Collections.singleton(defaultOwner));
-        mockMvc.perform(get("/owners/index"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("owners/index"))
-                .andExpect(model().attributeExists("owners"))
-                .andExpect(model().attribute("owners", hasSize(1)));
-        then(ownerService).should().findAll();
     }
 
     @Test
