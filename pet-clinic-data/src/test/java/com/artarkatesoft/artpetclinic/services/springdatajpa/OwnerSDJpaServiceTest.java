@@ -127,6 +127,6 @@ class OwnerSDJpaServiceTest {
         //when
         service.findAllByLastNameLike(lastName);
         //then
-        then(repository).should().findAllByLastNameLike(eq(lastName));
+        then(repository).should().findAllByLastNameContains(eq(lastName));
     }
 }
