@@ -1,11 +1,13 @@
 package com.artarkatesoft.artpetclinic.controllers;
 
+import com.artarkatesoft.artpetclinic.formatters.PetTypeFormatter;
 import com.artarkatesoft.artpetclinic.model.Owner;
 import com.artarkatesoft.artpetclinic.model.Pet;
 import com.artarkatesoft.artpetclinic.model.PetType;
 import com.artarkatesoft.artpetclinic.services.OwnerService;
 import com.artarkatesoft.artpetclinic.services.PetService;
 import com.artarkatesoft.artpetclinic.services.PetTypeService;
+import lombok.var;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -54,22 +57,28 @@ class PetControllerTest {
     Set<PetType> petTypes;
 
     @Captor
-    ArgumentCaptor<Owner> ownerCaptor;
-    @Captor
     ArgumentCaptor<Pet> petCaptor;
 
     @BeforeEach
     void setUp() {
-        mockMvc = MockMvcBuilders.standaloneSetup(petController).build();
+
+        var conversionService = new DefaultFormattingConversionService();
+        conversionService.addFormatterForFieldType(PetType.class, new PetTypeFormatter(petTypeService));
+
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(petController)
+                .setConversionService(conversionService)
+                .build();
         petTypes = new HashSet<>();
-        petTypes.add(PetType.builder().id(1L).name("Dog").build());
-        petTypes.add(PetType.builder().id(2L).name("Cat").build());
+        PetType dog = PetType.builder().id(1L).name("Dog").build();
+        petTypes.add(dog);
+        PetType cat = PetType.builder().id(2L).name("Cat").build();
+        petTypes.add(cat);
         owner = Owner.builder().build();
         owner.setId(1L);
 
         given(ownerService.findById(anyLong())).willReturn(owner);
         given(petTypeService.findAll()).willReturn(petTypes);
-
     }
 
     @Test
@@ -94,20 +103,24 @@ class PetControllerTest {
         Owner owner = Owner.builder().build();
         owner.setId(ownerId);
         given(ownerService.findById(anyLong())).willReturn(owner);
+
+        PetType dog = PetType.builder().id(1L).name("Dog").build();
+        given(petTypeService.findByName(eq("Dog"))).willReturn(dog);
+
         Pet pet = Pet.builder()
                 .name("Kuzya")
-                .petType(petTypes.iterator().next())
+                .petType(dog)
                 .birthDate(LocalDate.now())
                 .owner(owner)
                 .build();
+
         //when
         mockMvc
                 .perform(
                         post("/owners/{ownerId}/pets/new", ownerId)
                                 .param("name", pet.getName())
 //                                .param("birthDate", pet.getBirthDate().toString())
-                                .param("petType.id", pet.getPetType().getId().toString())
-                                .param("petType.name", pet.getPetType().getName())
+                                .param("petType", pet.getPetType().getName())
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlTemplate("/owners/{ownerId}", ownerId));
@@ -151,9 +164,13 @@ class PetControllerTest {
         Owner owner = Owner.builder().build();
         owner.setId(ownerId);
         given(ownerService.findById(anyLong())).willReturn(owner);
+
+        PetType dog = PetType.builder().id(1L).name("Dog").build();
+        given(petTypeService.findByName(eq("Dog"))).willReturn(dog);
+
         Pet pet = Pet.builder()
                 .name("Kuzya")
-                .petType(petTypes.iterator().next())
+                .petType(dog)
                 .birthDate(LocalDate.now())
                 .owner(owner)
                 .build();
@@ -166,8 +183,7 @@ class PetControllerTest {
                                 .param("name", pet.getName())
                                 .param("id", pet.getId().toString())
 //                                .param("birthDate", pet.getBirthDate().toString())
-                                .param("petType.id", pet.getPetType().getId().toString())
-                                .param("petType.name", pet.getPetType().getName())
+                                .param("petType", pet.getPetType().getName())
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlTemplate("/owners/{ownerId}", ownerId));
