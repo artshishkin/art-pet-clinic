@@ -32,4 +32,16 @@ public class Pet extends BaseEntity {
     @OneToMany(mappedBy = "pet", cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Visit> visits = new HashSet<>();
+
+    protected Set<Visit> getVisitsInternal() {
+        if (this.visits == null) {
+            this.visits = new HashSet<>();
+        }
+        return this.visits;
+    }
+
+    public void addVisit(Visit visit) {
+        getVisitsInternal().add(visit);
+        visit.setPet(this);
+    }
 }
