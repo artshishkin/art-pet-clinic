@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 public class PetTypeMapService extends AbstractMapService<PetType, Long> implements PetTypeService {
     @Override
     public PetType findByName(String name) {
-        if (!name.isEmpty())throw new RuntimeException("Pet Type '" + name + "' not found");
         return findAll().stream()
                 .filter(petType -> petType.getName().equals(name))
                 .findAny()
