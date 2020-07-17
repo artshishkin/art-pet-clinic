@@ -23,6 +23,6 @@ public class OwnerSDJpaService extends AbstractSDJpaService<Owner, Long> impleme
 
     @Override
     public List<Owner> findAllByLastNameLike(String lastName) {
-        return ((OwnerRepository) repository).findAllByLastNameLike(lastName);
+        return ((OwnerRepository) repository).findAllByLastNameContains(lastName);
     }
 }

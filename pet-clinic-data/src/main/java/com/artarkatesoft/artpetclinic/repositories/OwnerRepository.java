@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface OwnerRepository extends CrudRepository<Owner, Long> {
     Owner findOneByLastName(String lastName);
-    List<Owner> findAllByLastNameLike(String lastName);
+    List<Owner> findAllByLastNameContains(String lastName);
 }
