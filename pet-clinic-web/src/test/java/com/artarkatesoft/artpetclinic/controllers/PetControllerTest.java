@@ -168,10 +168,13 @@ class PetControllerTest {
         PetType dog = PetType.builder().id(1L).name("Dog").build();
         given(petTypeService.findByName(eq("Dog"))).willReturn(dog);
 
+        String petBirthDateString = "2016-07-03";
+        LocalDate birthDate = LocalDate.parse(petBirthDateString);
+
         Pet pet = Pet.builder()
                 .name("Kuzya")
                 .petType(dog)
-                .birthDate(LocalDate.now())
+                .birthDate(birthDate)
                 .owner(owner)
                 .build();
         Long petId = 3L;
@@ -182,7 +185,7 @@ class PetControllerTest {
                         post("/owners/{ownerId}/pets/{petId}/edit", ownerId, petId)
                                 .param("name", pet.getName())
                                 .param("id", pet.getId().toString())
-//                                .param("birthDate", pet.getBirthDate().toString())
+                                .param("birthDate", petBirthDateString)
                                 .param("petType", pet.getPetType().getName())
                 )
                 .andExpect(status().is3xxRedirection())
@@ -191,12 +194,13 @@ class PetControllerTest {
         //then
         then(ownerService).should().findById(eq(ownerId));
         then(petService).should().save(petCaptor.capture());
-        Pet captorValue = petCaptor.getValue();
-        assertThat(captorValue.getId()).isEqualTo(petId);
+        Pet savedPet = petCaptor.getValue();
+        assertThat(savedPet.getId()).isEqualTo(petId);
         assertAll(
-                () -> assertThat(captorValue.getName()).isEqualTo(pet.getName()),
-                () -> assertThat(captorValue.getPetType()).isEqualToComparingFieldByField(pet.getPetType()),
-                () -> assertThat(captorValue.getOwner().getId()).isEqualTo(pet.getOwner().getId())
+                () -> assertThat(savedPet.getName()).isEqualTo(pet.getName()),
+                () -> assertThat(savedPet.getBirthDate()).isEqualTo(birthDate),
+                () -> assertThat(savedPet.getPetType()).isEqualToComparingFieldByField(pet.getPetType()),
+                () -> assertThat(savedPet.getOwner().getId()).isEqualTo(pet.getOwner().getId())
         );
     }
 
