@@ -122,11 +122,27 @@ class OwnerControllerTest {
 
         @Test
         @DisplayName("when there is no query param for lastName should return ALL owners")
-        void testProcessFindForm_requestEmptyOwner() throws Exception {
+        void testProcessFindForm_requestNullOwner() throws Exception {
             //given
             given(ownerService.findAllByLastNameLike(anyString())).willReturn(defaultOwnerList);
             //when
             mockMvc.perform(get("/owners"))
+                    //then
+                    .andExpect(status().isOk())
+                    .andExpect(view().name("owners/ownersList"))
+                    .andExpect(model().attributeExists("selections"))
+                    .andExpect(model().attribute("selections", Matchers.iterableWithSize(defaultOwnerList.size())));
+            then(ownerService).should().findAllByLastNameLike(eq(""));
+        }
+
+        @Test
+        @DisplayName("when there is empty query param for lastName should return ALL owners")
+        void testProcessFindForm_requestEmptyOwner() throws Exception {
+            //given
+            given(ownerService.findAllByLastNameLike(anyString())).willReturn(defaultOwnerList);
+            //when
+            mockMvc.perform(get("/owners")
+                    .param("lastName", ""))
                     //then
                     .andExpect(status().isOk())
                     .andExpect(view().name("owners/ownersList"))
