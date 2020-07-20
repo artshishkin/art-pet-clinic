@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.time.LocalDate;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -76,10 +78,13 @@ class VisitControllerTest {
         Long petId = pet.getId();
         Long ownerId = 1L;
         final String VISIT_DESCRIPTION = "Visit description";
+        final String DATE_STRING = "2020-02-07";
+        final LocalDate visitDate = LocalDate.parse(DATE_STRING);
         //when
         mockMvc.perform(
                 post("/owners/{ownerId}/pets/{petId}/visits/new", ownerId, petId)
-                        .param("description", VISIT_DESCRIPTION))
+                        .param("description", VISIT_DESCRIPTION)
+                        .param("date", DATE_STRING))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlTemplate("/owners/{ownerId}", ownerId));
         //then
@@ -88,6 +93,7 @@ class VisitControllerTest {
         Visit savedVisit = visitCaptor.getValue();
         assertAll(
                 () -> assertThat(savedVisit.getDescription()).isEqualTo(VISIT_DESCRIPTION),
+                () -> assertThat(savedVisit.getDate()).isEqualTo(visitDate),
                 () -> assertThat(savedVisit.getPet().getId()).isEqualTo(petId)
         );
     }
